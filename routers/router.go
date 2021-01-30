@@ -25,13 +25,17 @@ func init() {
 		),
 	)
 
+	beego.Router("/", &controllers.WelcomeController{}, "*:Get")
+
 	beego.Router("/oauth/github", &oauth.GithubController{})
 
 	beego.Router("/server/wechat", &server.WechatController{}, "*:Get")
+
 	beego.Router("/wechat/qrcode", &wechat.QrCodeController{})
+
 	beego.Router("/s?:key.msg", &wechat.SendController{})
 	beego.Router("/r?:key.html", &controllers.ViewController{}, "*:Get")
 
-	beego.Router("/", &controllers.WelcomeController{}, "*:Get")
+
 	beego.AddNamespace(ns)
 }
