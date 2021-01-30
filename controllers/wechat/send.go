@@ -3,9 +3,11 @@ package wechat
 import (
 	"github.com/beego/beego/v2/client/orm"
 	beego "github.com/beego/beego/v2/server/web"
+	"github.com/golang-module/carbon"
 	"sogo/models"
 	"sogo/utils/idgen"
 	msg "sogo/utils/wechat"
+	"strconv"
 )
 
 // SendController operations for Send
@@ -18,9 +20,10 @@ func (c *SendController) doRun() {
 	response := make(map[string]interface{})
 
 	title := c.GetString("title")
-	//content := c.GetString("msg")
+	content := c.GetString("msg")
+	key := c.GetString(":key")
 
-	sub, err := models.GetSubscribeBySubPri(c.GetString(":key"))
+	sub, err := models.GetSubscribeBySubPri(key)
 
 	if err == orm.ErrNoRows {
 		response["success"] = true
@@ -37,7 +40,19 @@ func (c *SendController) doRun() {
 	response["errorMessage"] = "提交成功"
 	object := make(map[string]interface{})
 
-	_, warn := msg.Send(title, sub.SendTo)
+	//保存数据库
+	msgId, err := saveContent(key, title, content, sub.SendTo)
+
+	if err != nil {
+		response["errorMessage"] = err.Error()
+		response["model"] = nil
+		c.Data["json"] = response
+		c.ServeJSON()
+		return
+	}
+
+	//推送微信消息
+	_, warn := msg.Send(strconv.FormatInt(msgId, 10), title, sub.SendTo)
 
 	if warn != nil {
 		response["errorMessage"] = warn.Error()
@@ -47,16 +62,32 @@ func (c *SendController) doRun() {
 		return
 	}
 
-	gen := idgen.NewWorker(1, 1)
-	object["id"], _ = gen.NextID()
+	object["id"] = msgId
 	object["title"] = title
 	response["model"] = object
 	c.Data["json"] = response
 	c.ServeJSON()
 }
 
-func saveContent(title string ,content string, sendTo string)  {
+func saveContent(subPri, title, content, sendTo string) (id int64, err error) {
+	m := &models.Content{
+		Id:      int64(GetId()),
+		SubPri:  subPri,
+		Title:   title,
+		SendTo:  sendTo,
+		Content: content,
+	}
 
+	m.CreatedAt = carbon.Now().ToGoTime()
+	m.UpdatedAt = m.CreatedAt
+	_, err = models.AddContent(m)
+	return m.Id, err
+}
+
+func GetId() uint64 {
+	gen := idgen.NewWorker(1, 1)
+	id, _ := gen.NextID()
+	return id
 }
 
 // Post ...

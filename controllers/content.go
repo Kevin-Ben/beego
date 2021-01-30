@@ -55,7 +55,7 @@ func (c *ContentController) Post() {
 // @router /:id [get]
 func (c *ContentController) GetOne() {
 	idStr := c.Ctx.Input.Param(":id")
-	id, _ := strconv.Atoi(idStr)
+	id, _ := strconv.ParseInt(idStr, 10, 64)
 	v, err := models.GetContentById(id)
 	if err != nil {
 		c.Data["json"] = err.Error()
@@ -138,7 +138,7 @@ func (c *ContentController) GetAll() {
 // @router /:id [put]
 func (c *ContentController) Put() {
 	idStr := c.Ctx.Input.Param(":id")
-	id, _ := strconv.Atoi(idStr)
+	id, _ := strconv.ParseInt(idStr, 10, 64)
 	v := models.Content{Id: id}
 	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &v); err == nil {
 		if err := models.UpdateContentById(&v); err == nil {
@@ -161,7 +161,7 @@ func (c *ContentController) Put() {
 // @router /:id [delete]
 func (c *ContentController) Delete() {
 	idStr := c.Ctx.Input.Param(":id")
-	id, _ := strconv.Atoi(idStr)
+	id, _ := strconv.ParseInt(idStr, 10, 64)
 	if err := models.DeleteContent(id); err == nil {
 		c.Data["json"] = "OK"
 	} else {

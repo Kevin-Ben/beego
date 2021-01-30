@@ -6,7 +6,7 @@ import (
 	"github.com/silenceper/wechat/v2/officialaccount/message"
 )
 
-func Send(title string, sendTo string) (msgID int64, err error) {
+func Send(msgId, title, sendTo string) (msgID int64, err error) {
 
 	account := GetAccount()
 
@@ -38,7 +38,7 @@ func Send(title string, sendTo string) (msgID int64, err error) {
 	msg := message.TemplateMessage{
 		ToUser:     sendTo,
 		TemplateID: TemplateID,
-		URL:        WebSite + "message/xxx.html",
+		URL:        WebSite + "/r" + msgId + ".html",
 		Data:       data,
 	}
 

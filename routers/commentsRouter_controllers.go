@@ -160,6 +160,15 @@ func init() {
             Filters: nil,
             Params: nil})
 
+    beego.GlobalControllerRouter["sogo/controllers:ViewController"] = append(beego.GlobalControllerRouter["sogo/controllers:ViewController"],
+        beego.ControllerComments{
+            Method: "Get",
+            Router: "/",
+            AllowHTTPMethods: []string{"post"},
+            MethodParams: param.Make(),
+            Filters: nil,
+            Params: nil})
+
     beego.GlobalControllerRouter["sogo/controllers:WechatController"] = append(beego.GlobalControllerRouter["sogo/controllers:WechatController"],
         beego.ControllerComments{
             Method: "Post",

@@ -11,7 +11,7 @@ import (
 )
 
 type Content struct {
-	Id        int       `orm:"column(id);pk" description:"主健"`
+	Id        int64     `orm:"column(id);pk" description:"主健"`
 	SubPri    string    `orm:"column(sub_pri);size(100)" description:"订阅"`
 	Title     string    `orm:"column(title);size(100)" description:"标题"`
 	SendTo    string    `orm:"column(send_to);size(100)" description:"接收人"`
@@ -33,12 +33,12 @@ func init() {
 func AddContent(m *Content) (id int64, err error) {
 	o := orm.NewOrm()
 	id, err = o.Insert(m)
-	return
+	return id, err
 }
 
 // GetContentById retrieves Content by Id. Returns error if
 // Id doesn't exist
-func GetContentById(id int) (v *Content, err error) {
+func GetContentById(id int64) (v *Content, err error) {
 	o := orm.NewOrm()
 	v = &Content{Id: id}
 	if err = o.Read(v); err == nil {
@@ -142,7 +142,7 @@ func UpdateContentById(m *Content) (err error) {
 
 // DeleteContent deletes Content by Id and returns error if
 // the record to be deleted doesn't exist
-func DeleteContent(id int) (err error) {
+func DeleteContent(id int64) (err error) {
 	o := orm.NewOrm()
 	v := Content{Id: id}
 	// ascertain id exists in the database
