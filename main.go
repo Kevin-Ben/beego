@@ -21,7 +21,6 @@ func init() {
 
 	sqlconn, _ := beego.AppConfig.String("sqlconn")
 
-
 	orm.RegisterDriver("mysql", orm.DRMySQL)
 
 	// set default database
