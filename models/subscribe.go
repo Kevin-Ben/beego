@@ -3,78 +3,80 @@ package models
 import (
 	"errors"
 	"fmt"
+	"github.com/beego/beego/v2/client/orm"
 	"github.com/golang-module/carbon"
 	"reflect"
 	"strings"
 	"time"
-
-	"github.com/beego/beego/v2/client/orm"
 )
 
-type User struct {
-	Id        int       `orm:"column(id);auto" description:"编号"`
-	GithubId  int64     `orm:"column(github_id)"`
-	CreatedAt time.Time `orm:"column(created_at);type(datetime)" description:"创建时间"`
-	UpdatedAt time.Time `orm:"column(updated_at);type(datetime)" description:"注册时间"`
-}
-
-func (t *User) TableName() string {
-	return "user"
+type Subscribe struct {
+	Id        int64     `orm:"auto" type:"pk"`
+	SubPri    string    `orm:"size(100)"`
+	SendTo    string    `orm:"size(100)"`
+	CreatedAt time.Time `orm:"type(datetime)"`
+	UpdatedAt time.Time `orm:"type(datetime)"`
 }
 
 func init() {
-	orm.RegisterModelWithPrefix("ue_", new(User))
+	orm.RegisterModelWithPrefix("ue_", new(Subscribe))
 }
 
-// AddUser insert a new User into database and returns
+func ReadOrCreateSubscribe(subPri string, sendTo string) (v *Subscribe, err error) {
+	var objecId int64
+	o := orm.NewOrm()
+	object := &Subscribe{SubPri: subPri, SendTo: sendTo}
+	if err := o.Read(object); err == nil {
+		return v, nil
+	}
+
+	object.CreatedAt = carbon.Now().ToGoTime()
+	object.UpdatedAt = object.CreatedAt
+	objecId, err = o.Insert(object)
+	object.Id = int64(objecId)
+	return object, err
+
+}
+
+// AddSubscribe insert a new Subscribe into database and returns
 // last inserted Id on success.
-func AddUser(m *User) (id int64, err error) {
+func AddSubscribe(m *Subscribe) (id int64, err error) {
 	o := orm.NewOrm()
 	id, err = o.Insert(m)
 	return
 }
 
-// GetUserById retrieves User by Id. Returns error if
-// Id doesn't exist
-func GetUserById(id int) (v *User, err error) {
+func GetSubscribeBySubPri(search string) (v *Subscribe, err error) {
 	o := orm.NewOrm()
-	v = &User{Id: id}
-	if err = o.Read(v); err == nil {
+	v = &Subscribe{SubPri: search}
+	if err = o.QueryTable(new(Subscribe)).Filter("sub_pri", search).RelatedSel().One(v); err == nil {
 		return v, nil
 	}
 	return nil, err
 }
 
-func ReadOrCreate(githubId int64) (v *User, err error) {
-	var userId int64
+// GetSubscribeById retrieves Subscribe by Id. Returns error if
+// Id doesn't exist
+func GetSubscribeById(id int64) (v *Subscribe, err error) {
 	o := orm.NewOrm()
-	object := &User{GithubId: githubId}
-	if err := o.Read(object); err == nil {
+	v = &Subscribe{Id: id}
+	if err = o.QueryTable(new(Subscribe)).Filter("Id", id).RelatedSel().One(v); err == nil {
 		return v, nil
 	}
-	object.CreatedAt = carbon.Now().ToGoTime()
-	object.UpdatedAt = object.CreatedAt
-	userId, err = o.Insert(object)
-	object.Id = int(userId)
-	return object, err
-
+	return nil, err
 }
 
-// GetAllUser retrieves all User matches certain condition. Returns empty list if
+// GetAllSubscribe retrieves all Subscribe matches certain condition. Returns empty list if
 // no records exist
-func GetAllUser(query map[string]string, fields []string, sortby []string, order []string,
+func GetAllSubscribe(query map[string]string, fields []string, sortby []string, order []string,
 	offset int64, limit int64) (ml []interface{}, err error) {
 	o := orm.NewOrm()
-	qs := o.QueryTable(new(User))
+	qs := o.QueryTable(new(Subscribe))
 	// query k=v
 	for k, v := range query {
 		// rewrite dot-notation to Object__Attribute
 		k = strings.Replace(k, ".", "__", -1)
-		if strings.Contains(k, "isnull") {
-			qs = qs.Filter(k, (v == "true" || v == "1"))
-		} else {
-			qs = qs.Filter(k, v)
-		}
+		qs = qs.Filter(k, v)
 	}
 	// order by:
 	var sortFields []string
@@ -115,8 +117,8 @@ func GetAllUser(query map[string]string, fields []string, sortby []string, order
 		}
 	}
 
-	var l []User
-	qs = qs.OrderBy(sortFields...)
+	var l []Subscribe
+	qs = qs.OrderBy(sortFields...).RelatedSel()
 	if _, err = qs.Limit(limit, offset).All(&l, fields...); err == nil {
 		if len(fields) == 0 {
 			for _, v := range l {
@@ -138,11 +140,11 @@ func GetAllUser(query map[string]string, fields []string, sortby []string, order
 	return nil, err
 }
 
-// UpdateUser updates User by Id and returns error if
+// UpdateSubscribe updates Subscribe by Id and returns error if
 // the record to be updated doesn't exist
-func UpdateUserById(m *User) (err error) {
+func UpdateSubscribeById(m *Subscribe) (err error) {
 	o := orm.NewOrm()
-	v := User{Id: m.Id}
+	v := Subscribe{Id: m.Id}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
@@ -153,15 +155,15 @@ func UpdateUserById(m *User) (err error) {
 	return
 }
 
-// DeleteUser deletes User by Id and returns error if
+// DeleteSubscribe deletes Subscribe by Id and returns error if
 // the record to be deleted doesn't exist
-func DeleteUser(id int) (err error) {
+func DeleteSubscribe(id int64) (err error) {
 	o := orm.NewOrm()
-	v := User{Id: id}
+	v := Subscribe{Id: id}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
-		if num, err = o.Delete(&User{Id: id}); err == nil {
+		if num, err = o.Delete(&Subscribe{Id: id}); err == nil {
 			fmt.Println("Number of records deleted in database:", num)
 		}
 	}

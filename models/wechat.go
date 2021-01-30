@@ -11,61 +11,63 @@ import (
 	"github.com/beego/beego/v2/client/orm"
 )
 
-type User struct {
+type Wechat struct {
 	Id        int       `orm:"column(id);auto" description:"编号"`
-	GithubId  int64     `orm:"column(github_id)"`
+	UserId    int64     `orm:"column(user_id)" description:"用户ID"`
+	OpenId    string    `orm:"column(open_id);size(100)" description:"openId"`
 	CreatedAt time.Time `orm:"column(created_at);type(datetime)" description:"创建时间"`
-	UpdatedAt time.Time `orm:"column(updated_at);type(datetime)" description:"注册时间"`
+	UpdatedAt time.Time `orm:"column(updated_at);type(datetime)" description:"更新时间"`
 }
 
-func (t *User) TableName() string {
-	return "user"
+func (t *Wechat) TableName() string {
+	return "wechat"
 }
 
 func init() {
-	orm.RegisterModelWithPrefix("ue_", new(User))
+	orm.RegisterModelWithPrefix("ue_", new(Wechat))
 }
 
-// AddUser insert a new User into database and returns
+func ReadOrCreateWechat(openId string, userId int64) (v *Wechat, err error) {
+	var objecId int64
+	o := orm.NewOrm()
+	object := &Wechat{OpenId: openId}
+	if err := o.Read(object); err == nil {
+		return v, nil
+	}
+	object.UserId = userId
+	object.CreatedAt = carbon.Now().ToGoTime()
+	object.UpdatedAt = object.CreatedAt
+	objecId, err = o.Insert(object)
+	object.Id = int(objecId)
+	return object, err
+
+}
+
+// AddWechat insert a new Wechat into database and returns
 // last inserted Id on success.
-func AddUser(m *User) (id int64, err error) {
+func AddWechat(m *Wechat) (id int64, err error) {
 	o := orm.NewOrm()
 	id, err = o.Insert(m)
 	return
 }
 
-// GetUserById retrieves User by Id. Returns error if
+// GetWechatById retrieves Wechat by Id. Returns error if
 // Id doesn't exist
-func GetUserById(id int) (v *User, err error) {
+func GetWechatById(id int) (v *Wechat, err error) {
 	o := orm.NewOrm()
-	v = &User{Id: id}
+	v = &Wechat{Id: id}
 	if err = o.Read(v); err == nil {
 		return v, nil
 	}
 	return nil, err
 }
 
-func ReadOrCreate(githubId int64) (v *User, err error) {
-	var userId int64
-	o := orm.NewOrm()
-	object := &User{GithubId: githubId}
-	if err := o.Read(object); err == nil {
-		return v, nil
-	}
-	object.CreatedAt = carbon.Now().ToGoTime()
-	object.UpdatedAt = object.CreatedAt
-	userId, err = o.Insert(object)
-	object.Id = int(userId)
-	return object, err
-
-}
-
-// GetAllUser retrieves all User matches certain condition. Returns empty list if
+// GetAllWechat retrieves all Wechat matches certain condition. Returns empty list if
 // no records exist
-func GetAllUser(query map[string]string, fields []string, sortby []string, order []string,
+func GetAllWechat(query map[string]string, fields []string, sortby []string, order []string,
 	offset int64, limit int64) (ml []interface{}, err error) {
 	o := orm.NewOrm()
-	qs := o.QueryTable(new(User))
+	qs := o.QueryTable(new(Wechat))
 	// query k=v
 	for k, v := range query {
 		// rewrite dot-notation to Object__Attribute
@@ -115,7 +117,7 @@ func GetAllUser(query map[string]string, fields []string, sortby []string, order
 		}
 	}
 
-	var l []User
+	var l []Wechat
 	qs = qs.OrderBy(sortFields...)
 	if _, err = qs.Limit(limit, offset).All(&l, fields...); err == nil {
 		if len(fields) == 0 {
@@ -138,11 +140,11 @@ func GetAllUser(query map[string]string, fields []string, sortby []string, order
 	return nil, err
 }
 
-// UpdateUser updates User by Id and returns error if
+// UpdateWechat updates Wechat by Id and returns error if
 // the record to be updated doesn't exist
-func UpdateUserById(m *User) (err error) {
+func UpdateWechatById(m *Wechat) (err error) {
 	o := orm.NewOrm()
-	v := User{Id: m.Id}
+	v := Wechat{Id: m.Id}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
@@ -153,15 +155,15 @@ func UpdateUserById(m *User) (err error) {
 	return
 }
 
-// DeleteUser deletes User by Id and returns error if
+// DeleteWechat deletes Wechat by Id and returns error if
 // the record to be deleted doesn't exist
-func DeleteUser(id int) (err error) {
+func DeleteWechat(id int) (err error) {
 	o := orm.NewOrm()
-	v := User{Id: id}
+	v := Wechat{Id: id}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
-		if num, err = o.Delete(&User{Id: id}); err == nil {
+		if num, err = o.Delete(&Wechat{Id: id}); err == nil {
 			fmt.Println("Number of records deleted in database:", num)
 		}
 	}

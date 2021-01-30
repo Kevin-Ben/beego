@@ -10,13 +10,13 @@ import (
 	beego "github.com/beego/beego/v2/server/web"
 )
 
-// WechatController operations for Wechat
-type WechatController struct {
+// ContentController operations for Content
+type ContentController struct {
 	beego.Controller
 }
 
 // URLMapping ...
-func (c *WechatController) URLMapping() {
+func (c *ContentController) URLMapping() {
 	c.Mapping("Post", c.Post)
 	c.Mapping("GetOne", c.GetOne)
 	c.Mapping("GetAll", c.GetAll)
@@ -26,15 +26,15 @@ func (c *WechatController) URLMapping() {
 
 // Post ...
 // @Title Post
-// @Description create Wechat
-// @Param	body		body 	models.Wechat	true		"body for Wechat content"
-// @Success 201 {int} models.Wechat
+// @Description create Content
+// @Param	body		body 	models.Content	true		"body for Content content"
+// @Success 201 {int} models.Content
 // @Failure 403 body is empty
 // @router / [post]
-func (c *WechatController) Post() {
-	var v models.Wechat
+func (c *ContentController) Post() {
+	var v models.Content
 	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &v); err == nil {
-		if _, err := models.AddWechat(&v); err == nil {
+		if _, err := models.AddContent(&v); err == nil {
 			c.Ctx.Output.SetStatus(201)
 			c.Data["json"] = v
 		} else {
@@ -48,15 +48,15 @@ func (c *WechatController) Post() {
 
 // GetOne ...
 // @Title Get One
-// @Description get Wechat by id
+// @Description get Content by id
 // @Param	id		path 	string	true		"The key for staticblock"
-// @Success 200 {object} models.Wechat
+// @Success 200 {object} models.Content
 // @Failure 403 :id is empty
 // @router /:id [get]
-func (c *WechatController) GetOne() {
+func (c *ContentController) GetOne() {
 	idStr := c.Ctx.Input.Param(":id")
 	id, _ := strconv.Atoi(idStr)
-	v, err := models.GetWechatById(id)
+	v, err := models.GetContentById(id)
 	if err != nil {
 		c.Data["json"] = err.Error()
 	} else {
@@ -67,17 +67,17 @@ func (c *WechatController) GetOne() {
 
 // GetAll ...
 // @Title Get All
-// @Description get Wechat
+// @Description get Content
 // @Param	query	query	string	false	"Filter. e.g. col1:v1,col2:v2 ..."
 // @Param	fields	query	string	false	"Fields returned. e.g. col1,col2 ..."
 // @Param	sortby	query	string	false	"Sorted-by fields. e.g. col1,col2 ..."
 // @Param	order	query	string	false	"Order corresponding to each sortby field, if single value, apply to all sortby fields. e.g. desc,asc ..."
 // @Param	limit	query	string	false	"Limit the size of result set. Must be an integer"
 // @Param	offset	query	string	false	"Start position of result set. Must be an integer"
-// @Success 200 {object} models.Wechat
+// @Success 200 {object} models.Content
 // @Failure 403
 // @router / [get]
-func (c *WechatController) GetAll() {
+func (c *ContentController) GetAll() {
 	var fields []string
 	var sortby []string
 	var order []string
@@ -119,7 +119,7 @@ func (c *WechatController) GetAll() {
 		}
 	}
 
-	l, err := models.GetAllWechat(query, fields, sortby, order, offset, limit)
+	l, err := models.GetAllContent(query, fields, sortby, order, offset, limit)
 	if err != nil {
 		c.Data["json"] = err.Error()
 	} else {
@@ -130,18 +130,18 @@ func (c *WechatController) GetAll() {
 
 // Put ...
 // @Title Put
-// @Description update the Wechat
+// @Description update the Content
 // @Param	id		path 	string	true		"The id you want to update"
-// @Param	body		body 	models.Wechat	true		"body for Wechat content"
-// @Success 200 {object} models.Wechat
+// @Param	body		body 	models.Content	true		"body for Content content"
+// @Success 200 {object} models.Content
 // @Failure 403 :id is not int
 // @router /:id [put]
-func (c *WechatController) Put() {
+func (c *ContentController) Put() {
 	idStr := c.Ctx.Input.Param(":id")
 	id, _ := strconv.Atoi(idStr)
-	v := models.Wechat{Id: id}
+	v := models.Content{Id: id}
 	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &v); err == nil {
-		if err := models.UpdateWechatById(&v); err == nil {
+		if err := models.UpdateContentById(&v); err == nil {
 			c.Data["json"] = "OK"
 		} else {
 			c.Data["json"] = err.Error()
@@ -154,15 +154,15 @@ func (c *WechatController) Put() {
 
 // Delete ...
 // @Title Delete
-// @Description delete the Wechat
+// @Description delete the Content
 // @Param	id		path 	string	true		"The id you want to delete"
 // @Success 200 {string} delete success!
 // @Failure 403 id is empty
 // @router /:id [delete]
-func (c *WechatController) Delete() {
+func (c *ContentController) Delete() {
 	idStr := c.Ctx.Input.Param(":id")
 	id, _ := strconv.Atoi(idStr)
-	if err := models.DeleteWechat(id); err == nil {
+	if err := models.DeleteContent(id); err == nil {
 		c.Data["json"] = "OK"
 	} else {
 		c.Data["json"] = err.Error()

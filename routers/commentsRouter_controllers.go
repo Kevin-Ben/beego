@@ -7,6 +7,69 @@ import (
 
 func init() {
 
+    beego.GlobalControllerRouter["sogo/controllers/wechat:SendController"] = append(beego.GlobalControllerRouter["sogo/controllers/wechat:SendController"],
+        beego.ControllerComments{
+            Method: "Post",
+            Router: "/",
+            AllowHTTPMethods: []string{"post"},
+            MethodParams: param.Make(),
+            Filters: nil,
+            Params: nil})
+
+    beego.GlobalControllerRouter["sogo/controllers/wechat:SendController"] = append(beego.GlobalControllerRouter["sogo/controllers/wechat:SendController"],
+        beego.ControllerComments{
+            Method: "Get",
+            Router: "/:id",
+            AllowHTTPMethods: []string{"get"},
+            MethodParams: param.Make(),
+            Filters: nil,
+            Params: nil})
+
+    beego.GlobalControllerRouter["sogo/controllers:ContentController"] = append(beego.GlobalControllerRouter["sogo/controllers:ContentController"],
+        beego.ControllerComments{
+            Method: "Post",
+            Router: "/",
+            AllowHTTPMethods: []string{"post"},
+            MethodParams: param.Make(),
+            Filters: nil,
+            Params: nil})
+
+    beego.GlobalControllerRouter["sogo/controllers:ContentController"] = append(beego.GlobalControllerRouter["sogo/controllers:ContentController"],
+        beego.ControllerComments{
+            Method: "GetAll",
+            Router: "/",
+            AllowHTTPMethods: []string{"get"},
+            MethodParams: param.Make(),
+            Filters: nil,
+            Params: nil})
+
+    beego.GlobalControllerRouter["sogo/controllers:ContentController"] = append(beego.GlobalControllerRouter["sogo/controllers:ContentController"],
+        beego.ControllerComments{
+            Method: "GetOne",
+            Router: "/:id",
+            AllowHTTPMethods: []string{"get"},
+            MethodParams: param.Make(),
+            Filters: nil,
+            Params: nil})
+
+    beego.GlobalControllerRouter["sogo/controllers:ContentController"] = append(beego.GlobalControllerRouter["sogo/controllers:ContentController"],
+        beego.ControllerComments{
+            Method: "Put",
+            Router: "/:id",
+            AllowHTTPMethods: []string{"put"},
+            MethodParams: param.Make(),
+            Filters: nil,
+            Params: nil})
+
+    beego.GlobalControllerRouter["sogo/controllers:ContentController"] = append(beego.GlobalControllerRouter["sogo/controllers:ContentController"],
+        beego.ControllerComments{
+            Method: "Delete",
+            Router: "/:id",
+            AllowHTTPMethods: []string{"delete"},
+            MethodParams: param.Make(),
+            Filters: nil,
+            Params: nil})
+
     beego.GlobalControllerRouter["sogo/controllers:ObjectController"] = append(beego.GlobalControllerRouter["sogo/controllers:ObjectController"],
         beego.ControllerComments{
             Method: "Post",
@@ -72,8 +135,8 @@ func init() {
 
     beego.GlobalControllerRouter["sogo/controllers:UserController"] = append(beego.GlobalControllerRouter["sogo/controllers:UserController"],
         beego.ControllerComments{
-            Method: "Get",
-            Router: "/:uid",
+            Method: "GetOne",
+            Router: "/:id",
             AllowHTTPMethods: []string{"get"},
             MethodParams: param.Make(),
             Filters: nil,
@@ -82,7 +145,7 @@ func init() {
     beego.GlobalControllerRouter["sogo/controllers:UserController"] = append(beego.GlobalControllerRouter["sogo/controllers:UserController"],
         beego.ControllerComments{
             Method: "Put",
-            Router: "/:uid",
+            Router: "/:id",
             AllowHTTPMethods: []string{"put"},
             MethodParams: param.Make(),
             Filters: nil,
@@ -91,26 +154,53 @@ func init() {
     beego.GlobalControllerRouter["sogo/controllers:UserController"] = append(beego.GlobalControllerRouter["sogo/controllers:UserController"],
         beego.ControllerComments{
             Method: "Delete",
-            Router: "/:uid",
+            Router: "/:id",
             AllowHTTPMethods: []string{"delete"},
             MethodParams: param.Make(),
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["sogo/controllers:UserController"] = append(beego.GlobalControllerRouter["sogo/controllers:UserController"],
+    beego.GlobalControllerRouter["sogo/controllers:WechatController"] = append(beego.GlobalControllerRouter["sogo/controllers:WechatController"],
         beego.ControllerComments{
-            Method: "Login",
-            Router: "/login",
+            Method: "Post",
+            Router: "/",
+            AllowHTTPMethods: []string{"post"},
+            MethodParams: param.Make(),
+            Filters: nil,
+            Params: nil})
+
+    beego.GlobalControllerRouter["sogo/controllers:WechatController"] = append(beego.GlobalControllerRouter["sogo/controllers:WechatController"],
+        beego.ControllerComments{
+            Method: "GetAll",
+            Router: "/",
             AllowHTTPMethods: []string{"get"},
             MethodParams: param.Make(),
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["sogo/controllers:UserController"] = append(beego.GlobalControllerRouter["sogo/controllers:UserController"],
+    beego.GlobalControllerRouter["sogo/controllers:WechatController"] = append(beego.GlobalControllerRouter["sogo/controllers:WechatController"],
         beego.ControllerComments{
-            Method: "Logout",
-            Router: "/logout",
+            Method: "GetOne",
+            Router: "/:id",
             AllowHTTPMethods: []string{"get"},
+            MethodParams: param.Make(),
+            Filters: nil,
+            Params: nil})
+
+    beego.GlobalControllerRouter["sogo/controllers:WechatController"] = append(beego.GlobalControllerRouter["sogo/controllers:WechatController"],
+        beego.ControllerComments{
+            Method: "Put",
+            Router: "/:id",
+            AllowHTTPMethods: []string{"put"},
+            MethodParams: param.Make(),
+            Filters: nil,
+            Params: nil})
+
+    beego.GlobalControllerRouter["sogo/controllers:WechatController"] = append(beego.GlobalControllerRouter["sogo/controllers:WechatController"],
+        beego.ControllerComments{
+            Method: "Delete",
+            Router: "/:id",
+            AllowHTTPMethods: []string{"delete"},
             MethodParams: param.Make(),
             Filters: nil,
             Params: nil})

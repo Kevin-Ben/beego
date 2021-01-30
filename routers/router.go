@@ -9,6 +9,8 @@ package routers
 
 import (
 	"sogo/controllers"
+	"sogo/controllers/oauth"
+	"sogo/controllers/server"
 	"sogo/controllers/wechat"
 
 	beego "github.com/beego/beego/v2/server/web"
@@ -21,13 +23,14 @@ func init() {
 				&controllers.ObjectController{},
 			),
 		),
-		beego.NSNamespace("/user",
-			beego.NSInclude(
-				&controllers.UserController{},
-			),
-		),
 	)
-	beego.Router("/wechat/index", &wechat.IndexController{},"*:Get")
+
+	beego.Router("/oauth/github", &oauth.GithubController{})
+
+	beego.Router("/server/wechat", &server.WechatController{}, "*:Get")
 	beego.Router("/wechat/qrcode", &wechat.QrCodeController{})
+	beego.Router("/s?:key.msg", &wechat.SendController{})
+
+	beego.Router("/", &controllers.WelcomeController{}, "*:Get")
 	beego.AddNamespace(ns)
 }
