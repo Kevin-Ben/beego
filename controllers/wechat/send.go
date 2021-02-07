@@ -15,6 +15,7 @@ type SendController struct {
 	beego.Controller
 }
 
+
 func (c *SendController) doRun() {
 
 	response := make(map[string]interface{})
@@ -22,6 +23,20 @@ func (c *SendController) doRun() {
 	title := c.GetString("title")
 	content := c.GetString("msg")
 	key := c.GetString(":key")
+
+	if title == "" {
+		response["success"] = true
+		response["errorCode"] = 404
+		response["errorMessage"] = "标题不允许为空"
+		response["model"] = nil
+		c.Data["json"] = response
+		c.ServeJSON()
+		return
+	}
+
+	if content == "" {
+		content = title
+	}
 
 	sub, err := models.GetSubscribeBySubPri(key)
 

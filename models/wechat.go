@@ -11,6 +11,11 @@ import (
 	"github.com/beego/beego/v2/client/orm"
 )
 
+
+var (
+	Wechats map[string]*Wechat
+)
+
 type Wechat struct {
 	Id        int       `orm:"column(id);auto" description:"编号"`
 	UserId    int64     `orm:"column(user_id)" description:"用户ID"`

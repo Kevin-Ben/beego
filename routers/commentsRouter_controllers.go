@@ -7,6 +7,15 @@ import (
 
 func init() {
 
+    beego.GlobalControllerRouter["sogo/controllers/ding:SingleController"] = append(beego.GlobalControllerRouter["sogo/controllers/ding:SingleController"],
+        beego.ControllerComments{
+            Method: "Post",
+            Router: "/",
+            AllowHTTPMethods: []string{"post"},
+            MethodParams: param.Make(),
+            Filters: nil,
+            Params: nil})
+
     beego.GlobalControllerRouter["sogo/controllers/wechat:SendController"] = append(beego.GlobalControllerRouter["sogo/controllers/wechat:SendController"],
         beego.ControllerComments{
             Method: "Post",
@@ -45,7 +54,7 @@ func init() {
 
     beego.GlobalControllerRouter["sogo/controllers:ContentController"] = append(beego.GlobalControllerRouter["sogo/controllers:ContentController"],
         beego.ControllerComments{
-            Method: "GetOne",
+            Method: "Get",
             Router: "/:id",
             AllowHTTPMethods: []string{"get"},
             MethodParams: param.Make(),
@@ -135,7 +144,7 @@ func init() {
 
     beego.GlobalControllerRouter["sogo/controllers:UserController"] = append(beego.GlobalControllerRouter["sogo/controllers:UserController"],
         beego.ControllerComments{
-            Method: "GetOne",
+            Method: "Get",
             Router: "/:id",
             AllowHTTPMethods: []string{"get"},
             MethodParams: param.Make(),
@@ -189,7 +198,7 @@ func init() {
 
     beego.GlobalControllerRouter["sogo/controllers:WechatController"] = append(beego.GlobalControllerRouter["sogo/controllers:WechatController"],
         beego.ControllerComments{
-            Method: "GetOne",
+            Method: "Get",
             Router: "/:id",
             AllowHTTPMethods: []string{"get"},
             MethodParams: param.Make(),

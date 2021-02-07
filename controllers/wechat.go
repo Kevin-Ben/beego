@@ -16,13 +16,13 @@ type WechatController struct {
 }
 
 // URLMapping ...
-func (c *WechatController) URLMapping() {
-	c.Mapping("Post", c.Post)
-	c.Mapping("GetOne", c.GetOne)
-	c.Mapping("GetAll", c.GetAll)
-	c.Mapping("Put", c.Put)
-	c.Mapping("Delete", c.Delete)
-}
+//func (c *WechatController) URLMapping() {
+//	c.Mapping("Post", c.Post)
+//	c.Mapping("GetOne", c.GetOne)
+//	c.Mapping("GetAll", c.GetAll)
+//	c.Mapping("Put", c.Put)
+//	c.Mapping("Delete", c.Delete)
+//}
 
 // Post ...
 // @Title Post
@@ -53,7 +53,7 @@ func (c *WechatController) Post() {
 // @Success 200 {object} models.Wechat
 // @Failure 403 :id is empty
 // @router /:id [get]
-func (c *WechatController) GetOne() {
+func (c *WechatController) Get() {
 	idStr := c.Ctx.Input.Param(":id")
 	id, _ := strconv.Atoi(idStr)
 	v, err := models.GetWechatById(id)

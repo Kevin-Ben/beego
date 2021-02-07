@@ -10,6 +10,10 @@ import (
 	"github.com/beego/beego/v2/client/orm"
 )
 
+var (
+	Contents map[string]*Content
+)
+
 type Content struct {
 	Id        int64     `orm:"column(id);pk" description:"主健"`
 	SubPri    string    `orm:"column(sub_pri);size(100)" description:"订阅"`

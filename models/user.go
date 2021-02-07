@@ -11,6 +11,10 @@ import (
 	"github.com/beego/beego/v2/client/orm"
 )
 
+var (
+	Users map[string]*User
+)
+
 type User struct {
 	Id        int       `orm:"column(id);auto" description:"编号"`
 	GithubId  int64     `orm:"column(github_id)"`

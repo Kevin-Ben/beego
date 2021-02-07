@@ -16,13 +16,13 @@ type UserController struct {
 }
 
 // URLMapping ...
-func (c *UserController) URLMapping() {
-	c.Mapping("Post", c.Post)
-	c.Mapping("GetOne", c.GetOne)
-	c.Mapping("GetAll", c.GetAll)
-	c.Mapping("Put", c.Put)
-	c.Mapping("Delete", c.Delete)
-}
+//func (c *UserController) URLMapping() {
+//	c.Mapping("Post", c.Post)
+//	c.Mapping("GetOne", c.GetOne)
+//	c.Mapping("GetAll", c.GetAll)
+//	c.Mapping("Put", c.Put)
+//	c.Mapping("Delete", c.Delete)
+//}
 
 // Post ...
 // @Title Post
@@ -53,7 +53,7 @@ func (c *UserController) Post() {
 // @Success 200 {object} models.User
 // @Failure 403 :id is empty
 // @router /:id [get]
-func (c *UserController) GetOne() {
+func (c *UserController) Get() {
 	idStr := c.Ctx.Input.Param(":id")
 	id, _ := strconv.Atoi(idStr)
 	v, err := models.GetUserById(id)

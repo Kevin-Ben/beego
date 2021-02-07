@@ -10,6 +10,10 @@ import (
 	"time"
 )
 
+var (
+	Subscribes map[string]*Subscribe
+)
+
 type Subscribe struct {
 	Id        int64     `orm:"auto" type:"pk"`
 	SubPri    string    `orm:"size(100)"`

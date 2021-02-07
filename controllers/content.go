@@ -16,13 +16,13 @@ type ContentController struct {
 }
 
 // URLMapping ...
-func (c *ContentController) URLMapping() {
-	c.Mapping("Post", c.Post)
-	c.Mapping("GetOne", c.GetOne)
-	c.Mapping("GetAll", c.GetAll)
-	c.Mapping("Put", c.Put)
-	c.Mapping("Delete", c.Delete)
-}
+//func (c *ContentController) URLMapping() {
+//	c.Mapping("Post", c.Post)
+//	c.Mapping("GetOne", c.GetOne)
+//	c.Mapping("GetAll", c.GetAll)
+//	c.Mapping("Put", c.Put)
+//	c.Mapping("Delete", c.Delete)
+//}
 
 // Post ...
 // @Title Post
@@ -53,7 +53,7 @@ func (c *ContentController) Post() {
 // @Success 200 {object} models.Content
 // @Failure 403 :id is empty
 // @router /:id [get]
-func (c *ContentController) GetOne() {
+func (c *ContentController) Get() {
 	idStr := c.Ctx.Input.Param(":id")
 	id, _ := strconv.ParseInt(idStr, 10, 64)
 	v, err := models.GetContentById(id)

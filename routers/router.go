@@ -9,6 +9,7 @@ package routers
 
 import (
 	"sogo/controllers"
+	"sogo/controllers/ding"
 	"sogo/controllers/oauth"
 	"sogo/controllers/server"
 	"sogo/controllers/wechat"
@@ -18,6 +19,11 @@ import (
 
 func init() {
 	ns := beego.NewNamespace("/v1",
+		beego.NSNamespace("/ding/single",
+			beego.NSInclude(
+				&ding.SingleController{},
+			),
+		),
 		beego.NSNamespace("/object",
 			beego.NSInclude(
 				&controllers.ObjectController{},
@@ -25,7 +31,13 @@ func init() {
 		),
 	)
 
+	beego.AddNamespace(ns)
+
 	beego.Router("/", &controllers.WelcomeController{}, "*:Get")
+
+	//beego.Router("/ding/batch", &ding.BatchController{}, "*:Batch")
+	//
+	//beego.Router("/ding/single", &ding.SingleController{}, "*:Single")
 
 	beego.Router("/oauth/github", &oauth.GithubController{})
 
@@ -36,6 +48,4 @@ func init() {
 	beego.Router("/s?:key.msg", &wechat.SendController{})
 	beego.Router("/r?:key.html", &controllers.ViewController{}, "*:Get")
 
-
-	beego.AddNamespace(ns)
 }
